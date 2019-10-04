@@ -16,7 +16,11 @@ public interface IRangeSliderModel {
 	
 	void setValue(Boolean isRight, int newValue);
 	
-	void setRangeProperties(Boolean isRight, int value, int min, int max);
+	int getExtent();
+	
+	void setExtent(int newEvent);
+	
+	void setRangeProperties(int valueL, int valueR, int extent, int min, int max);
 	
 	void addChangeListener(ChangeListener x);
 	
