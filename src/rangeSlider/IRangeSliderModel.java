@@ -4,13 +4,13 @@ import javax.swing.event.ChangeListener;
 
 public interface IRangeSliderModel {
 	
-	int getMinimum(Boolean isRight);
+	int getMinimum();
 	
-	void setMinimum(Boolean isRight, int newMinimmum);
+	//void setMinimum(Boolean isRight, int newMinimmum);
 	
-	int getMaximum(Boolean isRight);
+	int getMaximum();
 	
-	void setMaximum(Boolean isRight, int newMinimmum);
+	//void setMaximum(Boolean isRight, int newMinimmum);
 	
 	int getValue(Boolean isRight);
 	
