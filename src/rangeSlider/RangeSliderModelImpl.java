@@ -8,27 +8,34 @@ public class RangeSliderModelImpl implements IRangeSliderModel {
 	private int minimum;
 	private int valueL;
 	private int valueR;
+	private int extent;
 	
 	@Override
 	public int getMinimum(Boolean isRight) {
-		return (isRight) ? valueL + 1 : minimum;
+		return (isRight) ? valueL + extent : minimum;
 	}
 
 	@Override
-	public void setMinimum(Boolean isRight, int newMinimmum) {
-		if(isRight) 
+	public void setMinimum(int newMinimmum) {
+		int newMax = Math.max(newMinimmum + extent, maximum);
+        int newValueL = Math.max(newMinimmum, valueL);
+        int newValueR = Math.max(newMinimmum + extent, valueR);
+        int newExtent = Math.min(newValueR - newValueL, extent);
+        setRangeProperties(newValueL, newValueR, newExtent, newMinimmum, newMax);
 	}
 
 	@Override
 	public int getMaximum(Boolean isRight) {
-		// TODO Auto-generated method stub
-		return 0;
+		return (isRight) ? maximum : valueR - extent;
 	}
 
 	@Override
-	public void setMaximum(Boolean isRight, int newMinimmum) {
-		// TODO Auto-generated method stub
-		
+	public void setMaximum(int newMaximmum) {
+		int newMin = Math.min(newMaximmum - extent, minimum);
+        int newExtent = Math.min(newMaximmum - newMin, extent);
+        int newValueL = Math.min(n - newExtent, value);
+        int newValueR = Math.min(n - newExtent, value);
+        setRangeProperties(newValue, newExtent, newMin, n, isAdjusting);
 	}
 
 	@Override
@@ -44,7 +51,7 @@ public class RangeSliderModelImpl implements IRangeSliderModel {
 	}
 
 	@Override
-	public void setRangeProperties(int valueL, int valueR, int min, int max) {
+	public void setRangeProperties(int valueL, int valueR, int extent, int min, int max) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -61,5 +68,16 @@ public class RangeSliderModelImpl implements IRangeSliderModel {
 		
 	}
 
+	@Override
+	public int getExtent() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setExtent(int newEvent) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
