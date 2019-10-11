@@ -1,26 +1,20 @@
 package rangeSlider;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.Rectangle2D;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
+import javax.swing.JComponent;
 
-public class RangeSliderUI extends JPanel {
+public class RangeSliderUI extends JComponent {
 
 	protected RangeSlider rangeSlider;
 	
 	public RangeSliderUI() {
-        // set a preferred size for the custom panel.
-        setPreferredSize(new Dimension(420,420));
-        
-        setBackground(new Color(255, 255, 255));
-        setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
@@ -40,9 +34,15 @@ public class RangeSliderUI extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        g.drawString("BLAH", 20, 20);
-        g.drawRect(200, 200, 200, 200);
+    	super.paintComponent(g);
+    	
+    	Graphics2D g2d = (Graphics2D) g;
+    	
+    	g2d.setColor(Color.GRAY);
+    	g2d.fill(new Rectangle2D.Double(10, 10, 100, 10));
+        
+        g2d.setColor(Color.WHITE);
+        g2d.fill(new Rectangle2D.Double(25, 5, 5, 20));
+        g2d.fill(new Rectangle2D.Double(75, 5, 5, 20));
     }
 }

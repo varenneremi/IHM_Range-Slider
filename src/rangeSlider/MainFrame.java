@@ -1,35 +1,31 @@
 package rangeSlider;
 
+import java.awt.Dimension;
+
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class MainFrame extends JFrame {
 
-	// Variables declaration - do not modify
-    private JPanel jPanel;
-    
 	public MainFrame() {
-        initComponents();
-    }
-	
-	
-	private void initComponents() {
-		jPanel = new RangeSliderUI();
+		this.setTitle("Range Slider Frame");
+	    this.setSize(400, 500);
+	    this.setLocationRelativeTo(null);
+	    this.setResizable(false);
+	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+	    
+	    JPanel rangePanel = new JPanel();
+		rangePanel.setLayout(new BoxLayout(rangePanel, BoxLayout.PAGE_AXIS));
 		
-		// add the component to the frame to see it!
-        this.setContentPane(jPanel);
-        // be nice to testers..
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();		
+	    rangePanel.add(new RangeSliderUI());
+	    rangePanel.setPreferredSize(new Dimension(380, 100));
+	    this.add(rangePanel);
+	    
+	    this.setVisible(true);
 	}
-
-
+	
 	public static void main(String args[]) {
-	    java.awt.EventQueue.invokeLater(new Runnable() {
-
-	        public void run() {
-	            new RangeSliderUI().setVisible(true);
-	        }
-	    });
+		MainFrame frame = new MainFrame();
 	}
 }
