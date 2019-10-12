@@ -72,7 +72,7 @@ public class RangeSliderModelImpl implements IRangeSliderModel {
 	}
 		
 	public void setRangeProperties(int valueL, int valueR, int extent, int min, int max) {
-		if (min > max)
+		if (min > max)		// why in the defaultBoundedRangeModel, the code don't change also max = min 
 			min = max;
 		if (valueR > max)
 			max = valueR;
