@@ -1,6 +1,7 @@
 package rangeSlider;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -10,6 +11,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 @SuppressWarnings("serial")
 public class RangeSliderUI extends JComponent {
@@ -32,7 +34,9 @@ public class RangeSliderUI extends JComponent {
 	private int pixVal;
 
 	protected RangeSlider rangeSlider;
-	protected IRangeSliderModel model;
+	
+	public JLabel displayValLeft;
+	public JLabel displayValRight;
 
 	public RangeSliderUI(int min, int max) {
 
@@ -40,9 +44,11 @@ public class RangeSliderUI extends JComponent {
 		pixVal = BARWIDTH / (max - min);
 		posButtonL = butOffsetX + pixVal * (max - min) / 4;
 		posButtonR = butOffsetX + pixVal * 3 * (max - min) / 4;
+		
+		displayValLeft = new JLabel(Integer.toString((max - min) / 4));
+		displayValRight = new JLabel(Integer.toString(3 * (max - min) / 4));
 
-		rangeSlider = new RangeSlider(min + (max - min) / 4, min + 3 * (max - min) / 4, min, max, this);
-		model = rangeSlider.getModel();
+		rangeSlider = new RangeSlider(min + (max - min) / 4, min + 3 * (max - min) / 4, min, max);
 
 		setListener();
 	}
@@ -68,7 +74,9 @@ public class RangeSliderUI extends JComponent {
 	private void computeMousePressed(MouseEvent evt) {
 		Point p = evt.getPoint();
 		if(p.x >= posBarMin && p.x < posButtonL && p.y >= barOffsetY && p.y <= barOffsetY + BARHEIGHT) {
-			rangeSlider.clickLeft(valMin + (p.x - posBarMin) / pixVal);
+			int val = valMin + (p.x - posBarMin) / pixVal;
+			rangeSlider.clickLeft(val);
+			computeLeftBut(val);
 		}
 		if(p.x >= posButtonL && p.x <= posButtonL + BUTWIDTH && p.y >= butOffsetY && p.y <= butOffsetY + BUTHEIGHT) {
 			rangeSlider.clickLeftButton();
@@ -77,25 +85,53 @@ public class RangeSliderUI extends JComponent {
 			rangeSlider.clickRightButton();
 		}
 		if(p.x > posButtonR + BUTWIDTH && p.x <= posBarMax && p.y >= barOffsetY && p.y <= barOffsetY + BARHEIGHT) {
-			rangeSlider.clickRight();
+			int val = valMin + (p.x - posBarMin) / pixVal;
+			rangeSlider.clickRight(val);
+			computeRightBut(val);
 		}
 	}
 
 	private void computeMouseReleased(MouseEvent evt) {
-		// TODO Auto-generated method stub
-
+		rangeSlider.mouseReleased();
 	}
 
 	private void computeMouseDragged(MouseEvent evt) {
-		// TODO Auto-generated method stub
-
+		Point p = evt.getPoint();
+		if(rangeSlider.getLeftPressed()) {
+			if(p.x >= posBarMin && p.x < posButtonR) {
+				int val = valMin + (p.x - posBarMin) / pixVal;
+				rangeSlider.dragLeftButton(val);
+				computeLeftBut(val);
+			}
+		} else if(rangeSlider.getRightPressed()) {
+			if(p.x > posButtonL + BUTWIDTH && p.x <= posBarMax) {
+				int val = valMin + (p.x - posBarMin) / pixVal;
+				rangeSlider.dragRightButton(val);
+				computeRightBut(val);
+			}
+		}
 	}
 	
 	public void computeLeftBut(int newValLeft) {
 		posButtonL = butOffsetX + pixVal * newValLeft;
+		displayValLeft.setText(Integer.toString(newValLeft));
+		this.repaint();
+	}
+	
+	public void computeRightBut(int newValRight) {
+		posButtonR = butOffsetX + pixVal * newValRight;
+		displayValRight.setText(Integer.toString(newValRight));
 		this.repaint();
 	}
 
+	public JLabel getLeftLabel() {
+		return displayValLeft;
+	}
+	
+	public JLabel getRightLabel() {
+		return displayValRight;
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -109,7 +145,7 @@ public class RangeSliderUI extends JComponent {
 		g2d.fill(new Rectangle2D.Double(posButtonL, butOffsetY, BUTWIDTH, BUTHEIGHT));
 
 		g2d.setColor(Color.BLUE);
-		g2d.fill(new Rectangle2D.Double(posButtonL + BUTWIDTH, barOffsetY, posButtonR - posButtonL + BUTWIDTH,
+		g2d.fill(new Rectangle2D.Double(posButtonL + BUTWIDTH, barOffsetY, posButtonR - posButtonL - BUTWIDTH,
 				BARHEIGHT));
 
 		g2d.setColor(Color.WHITE);
