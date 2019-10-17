@@ -109,6 +109,20 @@ public class RangeSliderUI extends JComponent {
 			posButtonR = p.x;
 			displayValRight.setText(Integer.toString(val));
 		}
+		if (p.x > posButtonL + BUTWIDTH / 2 && p.x < posButtonR - BUTWIDTH / 2 && p.y >= barOffsetY && p.y <= barOffsetY + BARHEIGHT) {
+			int center = posButtonR - posButtonL;
+			int val = valMin + (p.x - posBarMin) / pixVal;
+			if (p.x <= center) {
+				rangeSlider.clickLeft(val);
+				posButtonL = p.x;
+				displayValLeft.setText(Integer.toString(val));
+			}
+			else {
+				rangeSlider.clickRight(val);
+				posButtonR = p.x;
+				displayValLeft.setText(Integer.toString(val));
+			}
+		}
 		this.repaint();
 	}
 

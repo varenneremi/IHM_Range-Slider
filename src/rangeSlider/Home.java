@@ -6,7 +6,6 @@ public class Home {
 	int price; // price
 	int x; // coordinate on x
 	int y; // coordinate on y
-	int id; // id
 
 	public Home(int x, int y, int roomsNb, int price) {
 		this.x = x;
@@ -29,13 +28,5 @@ public class Home {
 
 	public int getY() {
 		return y;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getId() {
-		return id;
 	}
 }
