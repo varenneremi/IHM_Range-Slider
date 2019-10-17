@@ -1,27 +1,18 @@
 package rangeSlider;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 public class Map extends JPanel {
 
 	RangeSliderUI nbRooms, price;
 	ArrayList<Home> homes = new ArrayList<Home>();
-
+	
 	public Map (RangeSliderUI nbRooms, RangeSliderUI price, ArrayList<Home> homes) {
 		this.nbRooms = nbRooms;
 		this.price = price;
@@ -35,7 +26,7 @@ public class Map extends JPanel {
 		g.clearRect(0, 0, this.getWidth(), this.getHeight());
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 10, 10);
-		g.setColor(Color.BLUE);
+		g.setColor(Color.RED);
 		list1 = checkPrice(price);
 		list2 = checkNbRooms(nbRooms, list1);
 		for (int i = 0; i < list2.size(); i ++) {

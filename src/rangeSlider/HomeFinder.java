@@ -1,22 +1,18 @@
 package rangeSlider;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
+import java.util.Random;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 
 @SuppressWarnings("serial")
@@ -35,9 +31,7 @@ public class HomeFinder extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-		homes.add(new Home(300, 200, 4, 80));
-		homes.add(new Home(600, 400, 2, 30));
-		homes.add(new Home(100, 300, 3, 45));
+		homes = createHome(70);
 
 		Container mainContainer = this.getContentPane();
 
@@ -52,6 +46,19 @@ public class HomeFinder extends JFrame {
 		this.setVisible(true);
 	}
 
+	private ArrayList<Home> createHome(int i) {
+		ArrayList<Home> list = new ArrayList<Home>();
+		Random rnd = new Random();
+		int nbRooms, price, x, y;
+		for (int k = 0; k < i; k ++) {
+			nbRooms = rnd.nextInt(6) + 1;
+			price = rnd.nextInt(99) + 1;
+			x = rnd.nextInt(799) + 1;
+			y = rnd.nextInt(799) + 1;
+			list.add(new Home(x, y, nbRooms, price));
+		}
+		return list;
+	}
 	private JPanel buildControlPanel() {
 		JPanel controlPanel = new JPanel();
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.PAGE_AXIS));
@@ -69,6 +76,7 @@ public class HomeFinder extends JFrame {
 				map.repaint();
 			}
 		});
+
 
 		controlPanel.add(new JLabel("Rooms:"));
 		JPanel roomPanel = createRangeSlider(1, 7, false);
