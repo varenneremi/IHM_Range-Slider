@@ -34,9 +34,10 @@ public class RangeSliderUI extends JComponent {
 
 	// extremum Value for this slider
 	private int valMin;
-	
+
 	// Nb pixel per value
 	private int pixVal;
+	private int extent;
 
 	protected RangeSlider rangeSlider;
 
@@ -47,16 +48,23 @@ public class RangeSliderUI extends JComponent {
 	public RangeSliderUI(int min, int max) {
 
 		valMin = min;
+
+		extent = 1;
 		pixVal = BARWIDTH / (max - min);
-		posButtonL = posBarMin + pixVal * (max - min) / 4;
-		int valL = valMin + (posButtonL - posBarMin) / pixVal;
-		posButtonR = posBarMin + pixVal * 3 * (max - min) / 4;
-		int valR = valMin + (posButtonR - posBarMin) / pixVal;
+		while (pixVal == 0) {
+			extent++;
+			pixVal = BARWIDTH / ((max - min) / extent);
+		}
+
+		posButtonL = posBarMin + pixVal * (max - min) / (4 * extent);
+		int valL = valMin + (posButtonL - posBarMin) * extent / pixVal;
+		posButtonR = posBarMin + pixVal * 3 * (max - min) / (4 * extent);
+		int valR = valMin + (posButtonR - posBarMin) * extent / pixVal;
 
 		displayValLeft = new JLabel(Integer.toString(valL));
 		displayValRight = new JLabel(Integer.toString(valR));
 
-		rangeSlider = new RangeSlider(valL, valR, min, max);
+		rangeSlider = new RangeSlider(valL, valR, min, max, extent);
 
 		setListener();
 	}
@@ -82,7 +90,7 @@ public class RangeSliderUI extends JComponent {
 	private void computeMousePressed(MouseEvent evt) {
 		Point p = evt.getPoint();
 		if (p.x >= posBarMin && p.x < posButtonL - BUTWIDTH / 2 && p.y >= barOffsetY && p.y <= barOffsetY + BARHEIGHT) {
-			int val = valMin + (p.x - posBarMin) / pixVal;
+			int val = valMin + (p.x - posBarMin) * extent / pixVal;
 			rangeSlider.clickLeft(val);
 			posButtonL = p.x;
 			displayValLeft.setText(Integer.toString(val));
@@ -96,7 +104,7 @@ public class RangeSliderUI extends JComponent {
 			rangeSlider.clickRightButton();
 		}
 		if (p.x > posButtonR + BUTWIDTH / 2 && p.x <= posBarMax && p.y >= barOffsetY && p.y <= barOffsetY + BARHEIGHT) {
-			int val = valMin + (p.x - posBarMin) / pixVal;
+			int val = valMin + (p.x - posBarMin) * extent / pixVal;
 			rangeSlider.clickRight(val);
 			posButtonR = p.x;
 			displayValRight.setText(Integer.toString(val));
@@ -112,14 +120,14 @@ public class RangeSliderUI extends JComponent {
 		Point p = evt.getPoint();
 		if (rangeSlider.getLeftPressed()) {
 			if (p.x >= posBarMin && p.x < posButtonR) {
-				int val = valMin + (p.x - posBarMin) / pixVal;
+				int val = valMin + (p.x - posBarMin) * extent / pixVal;
 				rangeSlider.dragLeftButton(val);
 				posButtonL = p.x;
 				displayValLeft.setText(Integer.toString(val));
 			}
 		} else if (rangeSlider.getRightPressed()) {
 			if (p.x > posButtonL && p.x <= posBarMax) {
-				int val = valMin + (p.x - posBarMin) / pixVal;
+				int val = valMin + (p.x - posBarMin) * extent / pixVal;
 				rangeSlider.dragRightButton(val);
 				posButtonR = p.x;
 				displayValRight.setText(Integer.toString(val));

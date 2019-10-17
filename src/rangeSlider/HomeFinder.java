@@ -38,7 +38,7 @@ public class HomeFinder extends JFrame {
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.PAGE_AXIS));
 		
 		controlPanel.add(new JLabel("Price:"));
-		JPanel pricePanel = createRangeSlider(0, 100);
+		JPanel pricePanel = createRangeSlider(0, 1000);
 	    controlPanel.add(pricePanel);
 	    	    
 	    controlPanel.add(new JLabel("Rooms:"));
