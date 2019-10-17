@@ -78,7 +78,9 @@ public class HomeFinder extends JFrame {
 		
 		JPanel pricePanel = new JPanel();
 		pricePanel.setLayout(new BorderLayout());
-		pricePanel.add(new JLabel("Price:"), BorderLayout.NORTH);
+		JLabel priceLabel = new JLabel("Price:", JLabel.CENTER);
+		priceLabel.setVerticalAlignment(JLabel.CENTER);
+		pricePanel.add(priceLabel, BorderLayout.NORTH);
 		price = new RangeSliderUI(MINPRICE, MAXPRICE);
 		pricePanel.add(price, BorderLayout.CENTER);
 		controlPanel.add(pricePanel);
@@ -96,7 +98,9 @@ public class HomeFinder extends JFrame {
 
 		JPanel roomPanel = new JPanel();
 		roomPanel.setLayout(new BorderLayout());
-		roomPanel.add(new JLabel("Rooms:"), BorderLayout.NORTH);
+		JLabel roomLabel = new JLabel("Rooms:", JLabel.CENTER);
+		roomLabel.setVerticalAlignment(JLabel.CENTER);		
+		roomPanel.add(roomLabel, BorderLayout.NORTH);
 		nbRooms = new RangeSliderUI(MINROOM, MAXROOM);
 		roomPanel.add(nbRooms, BorderLayout.CENTER);
 		controlPanel.add(roomPanel);
