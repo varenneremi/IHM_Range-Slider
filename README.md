@@ -3,7 +3,7 @@ VARENNE Rémi & SOUCHON Loic
 
 En nous inspirant du modèle du BoundedRangeModel, nous avons fait notre rangeSlider avec un modèle MVC. 
 
-Nous avond fonc créer une interface nommée IRangeSliderModel qui est ensuite implémentée dans la classe qui nous sert de Model RangeSliderModelImpl. Nous retrouverons dans cette classe les modifications du modèle faite par le controller RangeSlider. 
+Nous avons créé une interface nommée IRangeSliderModel qui est ensuite implémentée dans la classe qui nous sert de Model RangeSliderModelImpl. Nous retrouverons dans cette classe les modifications du modèle faite par le controller RangeSlider. 
 
 Dans cette classe là seront fait les changements sur le modèle en fonction des informations données par les listeners se trouvant dans la vue RangeSliderUI. 
 

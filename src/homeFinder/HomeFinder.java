@@ -1,4 +1,4 @@
-package rangeSlider;
+package homeFinder;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -14,12 +14,23 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import rangeSlider.RangeSliderUI;
+
 
 @SuppressWarnings("serial")
 public class HomeFinder extends JFrame {
 
 	private static final int WIDTH = 1000;
 	private static final int HEIGHT = 1000;
+	
+	private final int NBHOUSES = 70;
+	
+	private static final int MINPRICE = 0;
+	private static final int MAXPRICE = 1000;
+
+	private static final int MINROOM = 1;
+	private static final int MAXROOM = 7;
+	
 	RangeSliderUI price, nbRooms;
 	ArrayList<Home> homes = new ArrayList<Home>();
 	Map map;
@@ -31,12 +42,13 @@ public class HomeFinder extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-		homes = createHome(70);
+		
+		homes = createHome(NBHOUSES);
 
 		Container mainContainer = this.getContentPane();
 
 		JPanel controlPanel = buildControlPanel();
-		controlPanel.setPreferredSize(new Dimension(WIDTH/3, HEIGHT));
+		controlPanel.setPreferredSize(new Dimension(WIDTH/4, HEIGHT));
 
 		mainContainer.add(controlPanel, BorderLayout.EAST);
 
@@ -51,21 +63,26 @@ public class HomeFinder extends JFrame {
 		Random rnd = new Random();
 		int nbRooms, price, x, y;
 		for (int k = 0; k < i; k ++) {
-			nbRooms = rnd.nextInt(6) + 1;
-			price = rnd.nextInt(99) + 1;
+			nbRooms = rnd.nextInt(MAXROOM) + 1;
+			price = rnd.nextInt(MAXPRICE) + 1;
 			x = rnd.nextInt(799) + 1;
 			y = rnd.nextInt(799) + 1;
 			list.add(new Home(x, y, nbRooms, price));
 		}
 		return list;
 	}
+	
 	private JPanel buildControlPanel() {
 		JPanel controlPanel = new JPanel();
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.PAGE_AXIS));
 		
-		controlPanel.add(new JLabel("Price:"));
-		JPanel pricePanel = createRangeSlider(0, 100, true);
+		JPanel pricePanel = new JPanel();
+		pricePanel.setLayout(new BorderLayout());
+		pricePanel.add(new JLabel("Price:"), BorderLayout.NORTH);
+		price = new RangeSliderUI(MINPRICE, MAXPRICE);
+		pricePanel.add(price, BorderLayout.CENTER);
 		controlPanel.add(pricePanel);
+		
 		price.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				map.repaint();
@@ -77,9 +94,11 @@ public class HomeFinder extends JFrame {
 			}
 		});
 
-
-		controlPanel.add(new JLabel("Rooms:"));
-		JPanel roomPanel = createRangeSlider(1, 7, false);
+		JPanel roomPanel = new JPanel();
+		roomPanel.setLayout(new BorderLayout());
+		roomPanel.add(new JLabel("Rooms:"), BorderLayout.NORTH);
+		nbRooms = new RangeSliderUI(MINROOM, MAXROOM);
+		roomPanel.add(nbRooms, BorderLayout.CENTER);
 		controlPanel.add(roomPanel);
 
 		nbRooms.addMouseListener(new MouseAdapter() {
@@ -104,19 +123,4 @@ public class HomeFinder extends JFrame {
 
 		return mapPanel;
 	}
-	
-	private JPanel createRangeSlider(int min, int max, Boolean isPrice) {
-		JPanel panel = new JPanel(new BorderLayout());
-		RangeSliderUI rangeSlider = new RangeSliderUI(min, max);
-		if (isPrice) 
-			price = rangeSlider;
-		else 
-			nbRooms = rangeSlider;
-		panel.add(rangeSlider,BorderLayout.CENTER);
-		panel.add(rangeSlider.getLeftLabel(), BorderLayout.WEST);
-		panel.add(rangeSlider.getRightLabel(), BorderLayout.EAST);
-
-		return panel;
-	}
-
 }

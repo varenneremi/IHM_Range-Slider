@@ -10,7 +10,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 
 @SuppressWarnings("serial")
 public class RangeSliderUI extends JComponent {
@@ -40,10 +39,7 @@ public class RangeSliderUI extends JComponent {
 	private int extent;
 
 	protected RangeSlider rangeSlider;
-
-	// Display of the two values
-	public JLabel displayValLeft;
-	public JLabel displayValRight;
+	protected IRangeSliderModel model;
 
 	public RangeSliderUI(int min, int max) {
 
@@ -61,11 +57,9 @@ public class RangeSliderUI extends JComponent {
 		posButtonR = posBarMin + pixVal * 3 * (max - min) / (4 * extent);
 		int valR = valMin + (posButtonR - posBarMin) * extent / pixVal;
 
-		displayValLeft = new JLabel(Integer.toString(valL));
-		displayValRight = new JLabel(Integer.toString(valR));
-
 		rangeSlider = new RangeSlider(valL, valR, min, max, extent);
-
+		model = rangeSlider.getModel();
+		
 		setListener();
 	}
 
@@ -93,7 +87,6 @@ public class RangeSliderUI extends JComponent {
 			int val = valMin + (p.x - posBarMin) * extent / pixVal;
 			rangeSlider.clickLeft(val);
 			posButtonL = p.x;
-			displayValLeft.setText(Integer.toString(val));
 		}
 		if (p.x >= posButtonL - BUTWIDTH / 2 && p.x <= posButtonL + BUTWIDTH / 2 && p.y >= butOffsetY
 				&& p.y <= butOffsetY + BUTHEIGHT) {
@@ -107,20 +100,17 @@ public class RangeSliderUI extends JComponent {
 			int val = valMin + (p.x - posBarMin) * extent / pixVal;
 			rangeSlider.clickRight(val);
 			posButtonR = p.x;
-			displayValRight.setText(Integer.toString(val));
 		}
 		if (p.x > posButtonL + BUTWIDTH / 2 && p.x < posButtonR - BUTWIDTH / 2 && p.y >= barOffsetY && p.y <= barOffsetY + BARHEIGHT) {
 			int center = posButtonR - posButtonL;
-			int val = valMin + (p.x - posBarMin) / pixVal;
+			int val = valMin + (p.x - posBarMin) * extent / pixVal;
 			if (p.x <= center) {
 				rangeSlider.clickLeft(val);
 				posButtonL = p.x;
-				displayValLeft.setText(Integer.toString(val));
 			}
 			else {
 				rangeSlider.clickRight(val);
 				posButtonR = p.x;
-				displayValLeft.setText(Integer.toString(val));
 			}
 		}
 		this.repaint();
@@ -137,25 +127,19 @@ public class RangeSliderUI extends JComponent {
 				int val = valMin + (p.x - posBarMin) * extent / pixVal;
 				rangeSlider.dragLeftButton(val);
 				posButtonL = p.x;
-				displayValLeft.setText(Integer.toString(val));
 			}
 		} else if (rangeSlider.getRightPressed()) {
 			if (p.x > posButtonL && p.x <= posBarMax) {
 				int val = valMin + (p.x - posBarMin) * extent / pixVal;
 				rangeSlider.dragRightButton(val);
 				posButtonR = p.x;
-				displayValRight.setText(Integer.toString(val));
 			}
 		}
 		this.repaint();
 	}
-
-	public JLabel getLeftLabel() {
-		return displayValLeft;
-	}
-
-	public JLabel getRightLabel() {
-		return displayValRight;
+	
+	public IRangeSliderModel getModel() {
+		return model;
 	}
 
 	@Override
@@ -179,5 +163,9 @@ public class RangeSliderUI extends JComponent {
 		g2d.setColor(Color.LIGHT_GRAY);
 		g2d.fill(new Rectangle2D.Double(posButtonR + BUTWIDTH / 2, barOffsetY, posBarMax - posButtonR - BUTWIDTH / 2,
 				BARHEIGHT));
+		
+		g.setColor(Color.BLACK);
+		g.drawString(Integer.toString(model.getValue(false)), posBarMin, 3 * BUTHEIGHT);
+		g.drawString(Integer.toString(model.getValue(true)), posBarMax, 3 * BUTHEIGHT);
 	}
 }
