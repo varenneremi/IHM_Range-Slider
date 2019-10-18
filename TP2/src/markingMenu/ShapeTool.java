@@ -10,15 +10,15 @@ import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
 @SuppressWarnings("serial")
-public class Tool extends AbstractAction implements MouseInputListener {
+public class ShapeTool extends AbstractAction implements MouseInputListener {
 	
-	public static Tool tool;
+	public static ShapeTool tool;
 	
 	Point o;
 	Shape shape;
 	JPanel panel;
 
-	public Tool(String name, JPanel panel) {
+	public ShapeTool(String name, JPanel panel) {
 		super(name);
 		this.panel = panel;
 	}

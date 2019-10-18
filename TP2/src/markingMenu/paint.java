@@ -12,6 +12,7 @@ import static java.lang.Math.min;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -32,9 +33,10 @@ import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
 class Paint extends JFrame {
-	Vector<Shape> shapes = new Vector<Shape>();
-	Tool tool;
+	Vector<ColoredShape> shapes = new Vector<ColoredShape>();
+	ShapeTool tool;
 	JPanel panel;
+	Color color = Color.BLACK;
 
 	public Paint(String title) {
 		super(title);
@@ -50,63 +52,86 @@ class Paint extends JFrame {
 				g2.setColor(Color.WHITE);
 				g2.fillRect(0, 0, getWidth(), getHeight());
 
-				g2.setColor(Color.BLACK);
-				for (Shape shape : shapes) {
-					g2.draw(shape);
+				for (ColoredShape shape : shapes) {
+					g2.setColor(shape.c);
+					g2.draw(shape.shape);
 				}
 			}
 		};
-
-		Tool tools[] = createTools();
-		add(new JToolBar() {
+		
+		JPanel toolPanel = new JPanel(new FlowLayout());
+		ShapeTool shapeTools[] = createShapeTools();
+		toolPanel.add(new JToolBar() {
 			{
-				for (AbstractAction tool : tools) {
+				for (AbstractAction tool : shapeTools) {
 					add(tool);
 				}
 			}
-		}, BorderLayout.NORTH);
+		});
 
+		ColorTool colorTools[] = createColorTools();
+		toolPanel.add(new JToolBar() {
+			{
+				for (AbstractAction tool : colorTools) {
+					add(tool);
+				}
+			}
+		});
+		
+		add(toolPanel);
 		add(panel);
 
 		pack();
 		setVisible(true);
 	}
 
-	private Tool[] createTools() {
-		Tool tools[] = { new Tool("pen", panel) {
+	private ColorTool[] createColorTools() {
+		ColorTool colorTools[] = { 
+				new ColorTool("red", Color.RED, color),
+				new ColorTool("blue", Color.BLUE, color),
+				new ColorTool("green", Color.GREEN, color) 
+				};
+		return colorTools;
+	}
+
+	private ShapeTool[] createShapeTools() {
+		ShapeTool tools[] = { new ShapeTool("pen", panel) {
 			public void mouseDragged(MouseEvent e) {
 				Path2D.Double path = (Path2D.Double) shape;
 				if (path == null) {
 					path = new Path2D.Double();
 					path.moveTo(o.getX(), o.getY());
-					shapes.add(shape = path);
+					shape = path;
+					shapes.add(new ColoredShape(shape, color));
 				}
 				path.lineTo(e.getX(), e.getY());
 				panel.repaint();
 			}
-		}, new Tool("rect", panel) {
+		}, new ShapeTool("rect", panel) {
 			public void mouseDragged(MouseEvent e) {
 				Rectangle2D.Double rect = (Rectangle2D.Double) shape;
 				if (rect == null) {
 					rect = new Rectangle2D.Double(o.getX(), o.getY(), 0, 0);
-					shapes.add(shape = rect);
+					shape = rect;
+					shapes.add(new ColoredShape(shape, color));
 				}
 				rect.setRect(min(e.getX(), o.getX()), min(e.getY(), o.getY()), abs(e.getX() - o.getX()),
 						abs(e.getY() - o.getY()));
 				panel.repaint();
 			}
-		}, new Tool("ellipse", panel) {
+		}, new ShapeTool("ellipse", panel) {
 			public void mouseDragged(MouseEvent e) {
 				Ellipse2D.Double ellipse = (Ellipse2D.Double) shape;
 				if (ellipse == null) {
 					ellipse = new Ellipse2D.Double(o.getX(), o.getY(), 0, 0);
-					shapes.add(shape = ellipse);
+					shape = ellipse;
+					shapes.add(new ColoredShape(shape, color));
 				}
-				ellipse.setFrameFromCenter(o.getX(), o.getY(), e.getX(),e.getY());
+				ellipse.setFrameFromCenter(o.getX(), o.getY(), e.getX(), e.getY());
 				panel.repaint();
 			}
 		} };
-		
+
 		return tools;
 	}
 
