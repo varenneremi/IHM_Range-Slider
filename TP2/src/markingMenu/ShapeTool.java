@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
 @SuppressWarnings("serial")
@@ -16,9 +15,9 @@ public class ShapeTool extends AbstractAction implements MouseInputListener {
 	
 	Point o;
 	Shape shape;
-	JPanel panel;
+	PaintPanel panel;
 
-	public ShapeTool(String name, JPanel panel) {
+	public ShapeTool(String name, PaintPanel panel) {
 		super(name);
 		this.panel = panel;
 	}

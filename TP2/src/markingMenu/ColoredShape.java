@@ -6,10 +6,10 @@ import java.awt.Shape;
 public class ColoredShape {
 
 	Shape shape;
-	Color c;
+	Color color;
 	
-	public ColoredShape(Shape shape, Color c) {
+	public ColoredShape(Shape shape, Color color) {
 		this.shape = shape;
-		this.c = c;
+		this.color = color;
 	}
 }
