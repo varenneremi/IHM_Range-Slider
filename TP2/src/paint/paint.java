@@ -1,4 +1,4 @@
-package markingMenu;
+package paint;
 //////////////////////////////////////////////////////////////////////////////
 
 // file    : Paint.java
@@ -24,19 +24,27 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
+import markingMenu.ColorTool;
+import markingMenu.ColoredShape;
+import markingMenu.MarkingMenu;
+import markingMenu.Menu;
+import markingMenu.ShapeTool;
+
 /* paint *******************************************************************/
 
 @SuppressWarnings("serial")
 class Paint extends JFrame {
 	ShapeTool tool;
 	PaintPanel panel;
+	
+	protected Menu[] initialMenu;
 
 	public Paint(String title) {
 		super(title);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(800, 600));
 
-		panel = new PaintPanel();
+		panel = new PaintPanel(this);
 		
 		JPanel toolPanel = new JPanel(new FlowLayout());
 		ShapeTool shapeTools[] = createShapeTools();
@@ -57,6 +65,8 @@ class Paint extends JFrame {
 			}
 		});
 		
+		initialMenu = new Menu[] {new MarkingMenu("Shape", shapeTools), new MarkingMenu("Color", colorTools)};
+		
 		add(toolPanel, BorderLayout.NORTH);
 		add(panel);
 
@@ -76,37 +86,37 @@ class Paint extends JFrame {
 	private ShapeTool[] createShapeTools() {
 		ShapeTool tools[] = { new ShapeTool("pen", panel) {
 			public void mouseDragged(MouseEvent e) {
-				Path2D.Double path = (Path2D.Double) shape;
+				Path2D.Double path = (Path2D.Double) getShape();
 				if (path == null) {
 					path = new Path2D.Double();
-					path.moveTo(o.getX(), o.getY());
-					shape = path;
-					panel.getShapes().add(new ColoredShape(shape, panel.getColor()));
+					path.moveTo(getOrigin().getX(), getOrigin().getY());
+					setShape(path);
+					panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
 				}
 				path.lineTo(e.getX(), e.getY());
 				panel.repaint();
 			}
 		}, new ShapeTool("rect", panel) {
 			public void mouseDragged(MouseEvent e) {
-				Rectangle2D.Double rect = (Rectangle2D.Double) shape;
+				Rectangle2D.Double rect = (Rectangle2D.Double) getShape();
 				if (rect == null) {
-					rect = new Rectangle2D.Double(o.getX(), o.getY(), 0, 0);
-					shape = rect;
-					panel.getShapes().add(new ColoredShape(shape, panel.getColor()));
+					rect = new Rectangle2D.Double(getOrigin().getX(), getOrigin().getY(), 0, 0);
+					setShape(rect);
+					panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
 				}
-				rect.setRect(min(e.getX(), o.getX()), min(e.getY(), o.getY()), abs(e.getX() - o.getX()),
-						abs(e.getY() - o.getY()));
+				rect.setRect(min(e.getX(), getOrigin().getX()), min(e.getY(), getOrigin().getY()), abs(e.getX() - getOrigin().getX()),
+						abs(e.getY() - getOrigin().getY()));
 				panel.repaint();
 			}
 		}, new ShapeTool("ellipse", panel) {
 			public void mouseDragged(MouseEvent e) {
-				Ellipse2D.Double ellipse = (Ellipse2D.Double) shape;
+				Ellipse2D.Double ellipse = (Ellipse2D.Double) getShape();
 				if (ellipse == null) {
-					ellipse = new Ellipse2D.Double(o.getX(), o.getY(), 0, 0);
-					shape = ellipse;
-					panel.getShapes().add(new ColoredShape(shape, panel.getColor()));
+					ellipse = new Ellipse2D.Double(getOrigin().getX(), getOrigin().getY(), 0, 0);
+					setShape(ellipse);
+					panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
 				}
-				ellipse.setFrameFromCenter(o.getX(), o.getY(), e.getX(), e.getY());
+				ellipse.setFrameFromCenter(getOrigin().getX(), getOrigin().getY(), e.getX(), e.getY());
 				panel.repaint();
 			}
 		} };
@@ -114,6 +124,10 @@ class Paint extends JFrame {
 		return tools;
 	}
 
+	public Menu[] getInitialMenu() {
+		return initialMenu;
+	}
+	
 	/* main *********************************************************************/
 
 	public static void main(String argv[]) {

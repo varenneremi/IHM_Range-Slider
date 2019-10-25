@@ -5,8 +5,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import paint.PaintPanel;
+
 @SuppressWarnings("serial")
-public class ColorTool extends AbstractAction {
+public class ColorTool extends AbstractAction implements Tool {
 
 	private Color color;
 	PaintPanel panel;
