@@ -11,24 +11,23 @@ import java.util.Vector;
 import javax.swing.JPanel;
 
 import markingMenu.ColoredShape;
-import markingMenu.Menu;
 
 @SuppressWarnings("serial")
 public class PaintPanel extends JPanel {
 
-	Paint parentFrame;
+	MenuView menuView;
 	
 	Vector<ColoredShape> shapes = new Vector<ColoredShape>();
 	Color color;
+	boolean active;
 	
-	boolean rightClicked = false;
-	Menu[] menus;
-
-	public PaintPanel(Paint parentFrame) {
-		this.parentFrame = parentFrame;
-		
+	public PaintPanel() {
 		this.color = Color.BLACK;
 		setListener();
+	}
+	
+	public void setMenuView(MenuView menuView) {
+		this.menuView = menuView;
 	}
 	
 	public Color getColor() {
@@ -47,15 +46,16 @@ public class PaintPanel extends JPanel {
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if(e.getButton() == MouseEvent.BUTTON3) {
-					rightClicked = true;
-					menus = parentFrame.getInitialMenu();
+					active = false;
+					menuView.setCenter(e.getPoint());
+					menuView.setVisible(true);
 					System.out.println("droit");
 				}
 			}
 			
 			public void mouseReleased(MouseEvent e) {
 				if(e.getButton() == MouseEvent.BUTTON3) {
-					rightClicked = false;
+					active = true;
 				}
 			}
 		});

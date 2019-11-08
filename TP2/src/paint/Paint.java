@@ -34,8 +34,8 @@ import markingMenu.ShapeTool;
 
 @SuppressWarnings("serial")
 class Paint extends JFrame {
-	ShapeTool tool;
 	PaintPanel panel;
+	MenuView menuView;
 	
 	protected Menu[] initialMenu;
 
@@ -43,8 +43,10 @@ class Paint extends JFrame {
 		super(title);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(800, 600));
-
-		panel = new PaintPanel(this);
+		
+		panel = new PaintPanel();
+		menuView = new MenuView(panel);
+		panel.setMenuView(menuView);
 		
 		JPanel toolPanel = new JPanel(new FlowLayout());
 		ShapeTool shapeTools[] = createShapeTools();
@@ -68,6 +70,9 @@ class Paint extends JFrame {
 		initialMenu = new Menu[] {new MarkingMenu("Shape", shapeTools), new MarkingMenu("Color", colorTools)};
 		
 		add(toolPanel, BorderLayout.NORTH);
+		add(menuView);
+		setVisible(true);
+		menuView.setVisible(false);
 		add(panel);
 
 		pack();
