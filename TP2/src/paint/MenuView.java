@@ -21,6 +21,8 @@ public class MenuView extends JPanel {
 	MenuModel model;
 	MenuController controller;
 	
+	public static final int SIZEMENU = 200;
+	
 	Point center;
 	Point p;
 	
@@ -30,9 +32,8 @@ public class MenuView extends JPanel {
 		controller = new MenuController(model);
 		
         long eventMask = AWTEvent.MOUSE_EVENT_MASK;
-        System.out.println(eventMask);
-        	ProcessListener(eventMask);
-		setListener();
+        ProcessListener(eventMask);
+        System.out.println(panel.active);
 	}
 	
 	public void setCenter(Point center) {
@@ -48,14 +49,13 @@ public class MenuView extends JPanel {
 						System.out.println(center);
 						System.out.println(p);
 						System.out.println(getTool());
+						panel.active = true;
 					}
 					
 				}
 				
 			}
 		}, mask);
-
-	
 	}
 	private void setListener() {
 		addMouseListener(new MouseAdapter() {
@@ -120,15 +120,30 @@ public class MenuView extends JPanel {
 		
 		g2.setStroke(new BasicStroke(2.0f));
 		g2.setPaint(Color.GRAY);
-		g2.draw(new Arc2D.Double(center.x-100, center.y-100, 200, 200, 0, 45, Arc2D.PIE));
-		//g2.drawString("test", center.x-50, center.y-50);;
-		g2.draw(new Arc2D.Double(center.x-100, center.y-100, 200, 200, 45, 45, Arc2D.PIE));
-		g2.draw(new Arc2D.Double(center.x-100, center.y-100, 200, 200, 90, 45, Arc2D.PIE));
-		g2.draw(new Arc2D.Double(center.x-100, center.y-100, 200, 200, 135, 45, Arc2D.PIE));
-		g2.draw(new Arc2D.Double(center.x-100, center.y-100, 200, 200, 180, 45, Arc2D.PIE));
-		g2.draw(new Arc2D.Double(center.x-100, center.y-100, 200, 200, 225, 45, Arc2D.PIE));
-		g2.draw(new Arc2D.Double(center.x-100, center.y-100, 200, 200, 270, 45, Arc2D.PIE));
-		g2.draw(new Arc2D.Double(center.x-100, center.y-100, 200, 200, 315, 45, Arc2D.PIE));
+		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 0, 45, Arc2D.PIE));
+		g2.drawString("1", center.x+SIZEMENU/4, center.y-SIZEMENU/8);
+		
+		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 45, 45, Arc2D.PIE));
+		g2.drawString("2", center.x+SIZEMENU/8, center.y-SIZEMENU/4);
+		
+		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 90, 45, Arc2D.PIE));
+		g2.drawString("3", center.x-SIZEMENU/8, center.y-SIZEMENU/4);
+
+		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 135, 45, Arc2D.PIE));
+		g2.drawString("4", center.x-SIZEMENU/4, center.y-SIZEMENU/8);
+
+		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 180, 45, Arc2D.PIE));
+		g2.drawString("5", center.x-SIZEMENU/4, center.y+SIZEMENU/8);
+
+		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 225, 45, Arc2D.PIE));
+		g2.drawString("6", center.x-SIZEMENU/8, center.y+SIZEMENU/4);
+
+		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 270, 45, Arc2D.PIE));
+		g2.drawString("7", center.x+SIZEMENU/8, center.y+SIZEMENU/4);
+
+		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 315, 45, Arc2D.PIE));
+		g2.drawString("8", center.x+SIZEMENU/4, center.y+SIZEMENU/8);
+
 
 	}
 }
