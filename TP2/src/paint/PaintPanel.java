@@ -21,7 +21,7 @@ public class PaintPanel extends JPanel {
 	Vector<ColoredShape> shapes = new Vector<ColoredShape>();
 	Color color;
 	boolean active;
-
+	
 	public PaintPanel() {
 		this.color = Color.BLACK;
 		this.active = true;
