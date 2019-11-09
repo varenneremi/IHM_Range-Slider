@@ -26,7 +26,7 @@ import javax.swing.SwingUtilities;
 
 import markingMenu.ColorTool;
 import markingMenu.ColoredShape;
-import markingMenu.MarkingMenu;
+import markingMenu.SubMenu;
 import markingMenu.Menu;
 import markingMenu.ShapeTool;
 
@@ -49,7 +49,7 @@ class Paint extends JFrame {
 		panel.setMenuView(menuView);
 
 		JPanel toolPanel = new JPanel(new FlowLayout());
-		ShapeTool shapeTools[] = createShapeTools();
+/*		ShapeTool shapeTools[] = createShapeTools();
 		toolPanel.add(new JToolBar() {
 			{
 				for (AbstractAction tool : shapeTools) {
@@ -67,7 +67,7 @@ class Paint extends JFrame {
 			}
 		});
 
-		initialMenu = new Menu[] { new MarkingMenu("Shape", shapeTools), new MarkingMenu("Color", colorTools) };
+		initialMenu = new Menu[] { new SubMenu("Shape", shapeTools), new SubMenu("Color", colorTools) };*/
 
 		add(toolPanel, BorderLayout.NORTH);
 		add(menuView);

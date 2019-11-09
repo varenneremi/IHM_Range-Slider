@@ -11,7 +11,7 @@ import java.awt.geom.Rectangle2D;
 
 import markingMenu.ColorTool;
 import markingMenu.ColoredShape;
-import markingMenu.MarkingMenu;
+import markingMenu.SubMenu;
 import markingMenu.Menu;
 import markingMenu.ShapeTool;
 
@@ -29,8 +29,8 @@ public class MenuModel {
 
 		ShapeTool shapeTools[] = createShapeTools();
 		ColorTool colorTools[] = createColorTools();
-		initialMenu = new Menu[] { new MarkingMenu("Shape", shapeTools), new MarkingMenu("Color", colorTools), new MarkingMenu("3", colorTools), new MarkingMenu("4", colorTools),
-				new MarkingMenu("5", colorTools), new MarkingMenu("6", colorTools), new MarkingMenu("7", colorTools), new MarkingMenu("8", colorTools), new MarkingMenu("9", colorTools)};
+		initialMenu = new Menu[] { new SubMenu("Shape", shapeTools), new SubMenu("Color", colorTools), new SubMenu("3", colorTools), new SubMenu("4", colorTools),
+				new SubMenu("5", colorTools), new SubMenu("6", colorTools), new SubMenu("7", colorTools), new SubMenu("8", colorTools)};
 		currentMenu = initialMenu;
 	}
 
@@ -40,7 +40,6 @@ public class MenuModel {
 		return colorTools;
 	}
 
-	@SuppressWarnings("serial")
 	private ShapeTool[] createShapeTools() {
 		ShapeTool tools[] = { new ShapeTool("pen", panel) {
 			public void mouseDragged(MouseEvent e) {

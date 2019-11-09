@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class MenuView extends JPanel {
 
-	private static final Double DIAMETRE = 200.0;
+	private static final int DIAMETRE = 200;
 
 	PaintPanel panel;
 	MenuModel model;
@@ -41,7 +41,11 @@ public class MenuView extends JPanel {
 		addMouseMotionListener(new MouseAdapter() {
 			public void mouseDragged(MouseEvent e) {
 				p = e.getPoint();
-				System.out.println(getTool());
+				if (center.distance(p) > DIAMETRE) {
+					controller.select(getTool());
+					setCenter(e.getPoint());
+				}
+				repaint();
 			}
 		});
 	}
@@ -86,21 +90,27 @@ public class MenuView extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
 
-		g2.setColor(Color.WHITE); 
+		g2.setColor(Color.WHITE);
 		g2.fillRect(0, 0, getWidth(), getHeight());
 
 		g2.setStroke(new BasicStroke(2.0f));
 		g2.setPaint(Color.GRAY);
-		
+
 		int lastAngle = 0;
 		int angle = 360 / model.currentMenu.length;
 		for (int i = 0; i < model.currentMenu.length; i++) {
-			if(i == model.currentMenu.length - 1) {
-				g2.draw(new Arc2D.Double(center.x - (DIAMETRE / 2), center.y - (DIAMETRE / 2), DIAMETRE, DIAMETRE, lastAngle, 360 - lastAngle, Arc2D.PIE));
+			if (i == model.currentMenu.length - 1) {
+				g2.draw(new Arc2D.Double(center.x - (DIAMETRE / 2), center.y - (DIAMETRE / 2), DIAMETRE, DIAMETRE,
+						lastAngle, 360 - lastAngle, Arc2D.PIE));
 			} else {
-				g2.draw(new Arc2D.Double(center.x - (DIAMETRE / 2), center.y - (DIAMETRE / 2), DIAMETRE, DIAMETRE, lastAngle, angle, Arc2D.PIE));
+				g2.draw(new Arc2D.Double(center.x - (DIAMETRE / 2), center.y - (DIAMETRE / 2), DIAMETRE, DIAMETRE,
+						lastAngle, angle, Arc2D.PIE));
 				lastAngle += angle;
 			}
+			
+			g2.drawString(model.currentMenu[i].name,
+					(float) (center.getX() + (Math.cos(lastAngle + angle / 2) * DIAMETRE / 4)),
+					(float) (center.getY() - (Math.sin(lastAngle + angle / 2) * DIAMETRE / 4)));
 		}
 	}
 }
