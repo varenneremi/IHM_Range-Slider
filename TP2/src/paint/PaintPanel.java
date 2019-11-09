@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.util.Vector;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import markingMenu.ColoredShape;
 
@@ -16,20 +17,21 @@ import markingMenu.ColoredShape;
 public class PaintPanel extends JPanel {
 
 	MenuView menuView;
-	
+
 	Vector<ColoredShape> shapes = new Vector<ColoredShape>();
 	Color color;
 	boolean active;
-	
+
 	public PaintPanel() {
 		this.color = Color.BLACK;
+		this.active = true;
 		setListener();
 	}
-	
+
 	public void setMenuView(MenuView menuView) {
 		this.menuView = menuView;
 	}
-	
+
 	public Color getColor() {
 		return color;
 	}
@@ -37,30 +39,39 @@ public class PaintPanel extends JPanel {
 	public void setColor(Color color) {
 		this.color = color;
 	}
-	
-	public Vector<ColoredShape> getShapes(){
+
+	public Vector<ColoredShape> getShapes() {
 		return shapes;
 	}
-	
+
 	private void setListener() {
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				if(e.getButton() == MouseEvent.BUTTON3) {
+				if (e.getButton() == MouseEvent.BUTTON3) {
 					active = false;
 					menuView.setCenter(e.getPoint());
+					menuView.resetMenu();
 					menuView.setVisible(true);
-					System.out.println("droit");
 				}
 			}
-			
+
 			public void mouseReleased(MouseEvent e) {
-				if(e.getButton() == MouseEvent.BUTTON3) {
+				if (e.getButton() == MouseEvent.BUTTON3) {
 					active = true;
+					menuView.setVisible(false);
+				}
+			}
+		});
+
+		addMouseMotionListener(new MouseAdapter() {
+			public void mouseDragged(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					menuView.dispatchEvent(e);
 				}
 			}
 		});
 	}
-	
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;

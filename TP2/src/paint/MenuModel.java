@@ -90,4 +90,12 @@ public class MenuModel {
 	public Menu[] getInitialMenu() {
 		return initialMenu;
 	}
+
+	public void resetMenu() {
+		currentMenu = initialMenu;
+	}
+	
+	public void setCurrentMenu(Menu[] menu) {
+		currentMenu = menu;
+	}
 }
