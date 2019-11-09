@@ -29,7 +29,8 @@ public class MenuModel {
 
 		ShapeTool shapeTools[] = createShapeTools();
 		ColorTool colorTools[] = createColorTools();
-		initialMenu = new Menu[] { new MarkingMenu("Shape", shapeTools), new MarkingMenu("Color", colorTools) };
+		initialMenu = new Menu[] { new MarkingMenu("Shape", shapeTools), new MarkingMenu("Color", colorTools), new MarkingMenu("3", colorTools), new MarkingMenu("4", colorTools),
+				new MarkingMenu("5", colorTools), new MarkingMenu("6", colorTools), new MarkingMenu("7", colorTools), new MarkingMenu("8", colorTools), new MarkingMenu("9", colorTools)};
 		currentMenu = initialMenu;
 	}
 
@@ -89,5 +90,13 @@ public class MenuModel {
 
 	public Menu[] getInitialMenu() {
 		return initialMenu;
+	}
+
+	public void resetMenu() {
+		currentMenu = initialMenu;
+	}
+	
+	public void setCurrentMenu(Menu[] menu) {
+		currentMenu = menu;
 	}
 }

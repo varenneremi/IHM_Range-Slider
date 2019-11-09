@@ -36,18 +36,18 @@ import markingMenu.ShapeTool;
 class Paint extends JFrame {
 	PaintPanel panel;
 	MenuView menuView;
-	
+
 	protected Menu[] initialMenu;
 
 	public Paint(String title) {
 		super(title);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(800, 600));
-		
+
 		panel = new PaintPanel();
 		menuView = new MenuView(panel);
 		panel.setMenuView(menuView);
-		
+
 		JPanel toolPanel = new JPanel(new FlowLayout());
 		ShapeTool shapeTools[] = createShapeTools();
 		toolPanel.add(new JToolBar() {
@@ -66,9 +66,9 @@ class Paint extends JFrame {
 				}
 			}
 		});
-		
-		initialMenu = new Menu[] {new MarkingMenu("Shape", shapeTools), new MarkingMenu("Color", colorTools)};
-		
+
+		initialMenu = new Menu[] { new MarkingMenu("Shape", shapeTools), new MarkingMenu("Color", colorTools) };
+
 		add(toolPanel, BorderLayout.NORTH);
 		add(menuView);
 		setVisible(true);
@@ -80,49 +80,52 @@ class Paint extends JFrame {
 	}
 
 	private ColorTool[] createColorTools() {
-		ColorTool colorTools[] = { 
-				new ColorTool("red", Color.RED, panel),
-				new ColorTool("blue", Color.BLUE, panel),
-				new ColorTool("green", Color.GREEN, panel) 
-				};
+		ColorTool colorTools[] = { new ColorTool("red", Color.RED, panel), new ColorTool("blue", Color.BLUE, panel),
+				new ColorTool("green", Color.GREEN, panel) };
 		return colorTools;
 	}
 
 	private ShapeTool[] createShapeTools() {
 		ShapeTool tools[] = { new ShapeTool("pen", panel) {
 			public void mouseDragged(MouseEvent e) {
-				Path2D.Double path = (Path2D.Double) getShape();
-				if (path == null) {
-					path = new Path2D.Double();
-					path.moveTo(getOrigin().getX(), getOrigin().getY());
-					setShape(path);
-					panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
+				if (panel.active) {
+					Path2D.Double path = (Path2D.Double) getShape();
+					if (path == null) {
+						path = new Path2D.Double();
+						path.moveTo(getOrigin().getX(), getOrigin().getY());
+						setShape(path);
+						panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
+					}
+					path.lineTo(e.getX(), e.getY());
+					panel.repaint();
 				}
-				path.lineTo(e.getX(), e.getY());
-				panel.repaint();
 			}
 		}, new ShapeTool("rect", panel) {
 			public void mouseDragged(MouseEvent e) {
-				Rectangle2D.Double rect = (Rectangle2D.Double) getShape();
-				if (rect == null) {
-					rect = new Rectangle2D.Double(getOrigin().getX(), getOrigin().getY(), 0, 0);
-					setShape(rect);
-					panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
+				if (panel.active) {
+					Rectangle2D.Double rect = (Rectangle2D.Double) getShape();
+					if (rect == null) {
+						rect = new Rectangle2D.Double(getOrigin().getX(), getOrigin().getY(), 0, 0);
+						setShape(rect);
+						panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
+					}
+					rect.setRect(min(e.getX(), getOrigin().getX()), min(e.getY(), getOrigin().getY()),
+							abs(e.getX() - getOrigin().getX()), abs(e.getY() - getOrigin().getY()));
+					panel.repaint();
 				}
-				rect.setRect(min(e.getX(), getOrigin().getX()), min(e.getY(), getOrigin().getY()), abs(e.getX() - getOrigin().getX()),
-						abs(e.getY() - getOrigin().getY()));
-				panel.repaint();
 			}
 		}, new ShapeTool("ellipse", panel) {
 			public void mouseDragged(MouseEvent e) {
-				Ellipse2D.Double ellipse = (Ellipse2D.Double) getShape();
-				if (ellipse == null) {
-					ellipse = new Ellipse2D.Double(getOrigin().getX(), getOrigin().getY(), 0, 0);
-					setShape(ellipse);
-					panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
+				if (panel.active) {
+					Ellipse2D.Double ellipse = (Ellipse2D.Double) getShape();
+					if (ellipse == null) {
+						ellipse = new Ellipse2D.Double(getOrigin().getX(), getOrigin().getY(), 0, 0);
+						setShape(ellipse);
+						panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
+					}
+					ellipse.setFrameFromCenter(getOrigin().getX(), getOrigin().getY(), e.getX(), e.getY());
+					panel.repaint();
 				}
-				ellipse.setFrameFromCenter(getOrigin().getX(), getOrigin().getY(), e.getX(), e.getY());
-				panel.repaint();
 			}
 		} };
 
@@ -132,7 +135,7 @@ class Paint extends JFrame {
 	public Menu[] getInitialMenu() {
 		return initialMenu;
 	}
-	
+
 	/* main *********************************************************************/
 
 	public static void main(String argv[]) {
