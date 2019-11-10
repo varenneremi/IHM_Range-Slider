@@ -56,9 +56,8 @@ public class MenuView extends JPanel {
 				
 			}
 		}, mask);
-
-	
 	}
+	
 	private void setListener() {
 		addMouseMotionListener(new MouseAdapter() {
 			public void mouseDragged(MouseEvent e) {
@@ -107,7 +106,6 @@ public class MenuView extends JPanel {
 	}
 	
 	public double distance (Point a, Point b) {
-		System.out.println(Math.sqrt( Math.pow(b.getY()-a.getY(),2) + Math.pow(b.getX()-a.getX(), 2)));
 		return Math.sqrt( Math.pow(b.getY()-a.getY(),2) + Math.pow(b.getX()-a.getX(), 2));
 	}
 	
@@ -122,6 +120,31 @@ public class MenuView extends JPanel {
 		else 
 			angle = 270 + (int)Math.toDegrees(Math.asin(distance(center, new Point((int)p.getX(), (int)center.getY()))/distance(center, p)));
 		return angle;
+	}
+	
+	public void paintText(int lastAngle, int angle, Graphics2D g2, int i) {
+		if ((lastAngle - (angle / 2) <= 90) && (lastAngle - (angle / 2) > 0)) {
+			g2.drawString(model.currentMenu[i].name,
+					(float) (center.getX() + (Math.cos(Math.toRadians(lastAngle - (angle / 2))) * DIAMETRE / 3)),
+					(float) (center.getY() - (Math.sin(Math.toRadians(lastAngle - (angle / 2))) * DIAMETRE / 3)));
+			System.out.println("\n");
+
+		}
+		else if ((lastAngle - (angle / 2) <= 180) && (lastAngle - (angle / 2) > 90)) {
+			g2.drawString(model.currentMenu[i].name,
+					(float) (center.getX() - (Math.sin(Math.toRadians(lastAngle - (angle / 2)-90)) * DIAMETRE / 3)),
+					(float) (center.getY() - (Math.cos(Math.toRadians(lastAngle - (angle / 2)-90)) * DIAMETRE / 3)));
+		}
+		else if ((lastAngle - (angle / 2) <= 270) && (lastAngle - (angle / 2) > 180)) {
+			g2.drawString(model.currentMenu[i].name,
+					(float) (center.getX() - (Math.cos(Math.toRadians(lastAngle - (angle / 2)-180)) * DIAMETRE / 3)),
+					(float) (center.getY() + (Math.sin(Math.toRadians(lastAngle - (angle / 2)-180)) * DIAMETRE / 3))); 
+			}
+		else {
+			g2.drawString(model.currentMenu[i].name,
+					(float) (center.getX() + (Math.sin(Math.toRadians(lastAngle - (angle / 2)-270)) * DIAMETRE / 3)),
+					(float) (center.getY() + (Math.cos(Math.toRadians(lastAngle - (angle / 2)-270)) * DIAMETRE / 3)));
+		}
 	}
 
 	public void paintComponent(Graphics g) {
@@ -142,41 +165,15 @@ public class MenuView extends JPanel {
 			if (i == model.currentMenu.length - 1) {
 				g2.draw(new Arc2D.Double(center.x - (DIAMETRE / 2), center.y - (DIAMETRE / 2), DIAMETRE, DIAMETRE,
 						lastAngle, 360 - lastAngle, Arc2D.PIE));
+				paintText(360, 360 - lastAngle, g2, i);
 			} else {
 				g2.draw(new Arc2D.Double(center.x - (DIAMETRE / 2), center.y - (DIAMETRE / 2), DIAMETRE, DIAMETRE,
 						lastAngle, angle, Arc2D.PIE));
 				lastAngle += angle;
+				paintText(lastAngle, angle, g2, i);
 			}
-			
-			g2.drawString(model.currentMenu[i].name,
-					(float) (center.getX() + (Math.cos(lastAngle + angle / 2) * DIAMETRE / 4)),
-					(float) (center.getY() - (Math.sin(lastAngle + angle / 2) * DIAMETRE / 4)));
+				
 		}
-        /*
-		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 0, 45, Arc2D.PIE));
-		g2.drawString("1", center.x+SIZEMENU/4, center.y-SIZEMENU/8);
-		
-		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 45, 45, Arc2D.PIE));
-		g2.drawString("2", center.x+SIZEMENU/8, center.y-SIZEMENU/4);
-		
-		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 90, 45, Arc2D.PIE));
-		g2.drawString("3", center.x-SIZEMENU/8, center.y-SIZEMENU/4);
-
-		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 135, 45, Arc2D.PIE));
-		g2.drawString("4", center.x-SIZEMENU/4, center.y-SIZEMENU/8);
-
-		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 180, 45, Arc2D.PIE));
-		g2.drawString("5", center.x-SIZEMENU/4, center.y+SIZEMENU/8);
-
-		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 225, 45, Arc2D.PIE));
-		g2.drawString("6", center.x-SIZEMENU/8, center.y+SIZEMENU/4);
-
-		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 270, 45, Arc2D.PIE));
-		g2.drawString("7", center.x+SIZEMENU/8, center.y+SIZEMENU/4);
-
-		g2.draw(new Arc2D.Double(center.x-SIZEMENU/2, center.y-SIZEMENU/2, SIZEMENU, SIZEMENU, 315, 45, Arc2D.PIE));
-		g2.drawString("8", center.x+SIZEMENU/4, center.y+SIZEMENU/8);
-        */
 
 	}
 }
