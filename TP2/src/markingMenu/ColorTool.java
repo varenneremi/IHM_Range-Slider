@@ -17,7 +17,6 @@ public class ColorTool extends Tool {
 
 	@Override
 	public void exec() {
-		System.out.println("using tool " + this);
 		panel.setColor(color);
 	}
 

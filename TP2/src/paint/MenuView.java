@@ -1,6 +1,5 @@
 package paint;
 
-import java.awt.AWTEvent;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -8,8 +7,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
-import java.awt.event.AWTEventListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Arc2D;
@@ -19,52 +16,34 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class MenuView extends JPanel {
 
-	private static final int DIAMETRE = 200;
+	private static final int RAYON = 100;
 
 	PaintPanel panel;
 	MenuModel model;
 	MenuController controller;
 	
-	public static final int SIZEMENU = 200;
-	
 	Point center;
-	Point p;
+	protected Point p;
 
 	public MenuView(PaintPanel panel) {
 		this.panel = panel;
 		model = new MenuModel(this, panel);
-		controller = new MenuController(model);
+		controller = new MenuController(model, this);
 		
-        long eventMask = AWTEvent.MOUSE_EVENT_MASK;
-        ProcessListener(eventMask);
+		setOpaque(false);
+		setListener();
 	}
 
 	public void setCenter(Point center) {
 		this.center = center;
 	}
 	
-	private void ProcessListener(Long mask) {
-		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-			public void eventDispatched(AWTEvent e) {
-				if (e.getID() == MouseEvent.MOUSE_RELEASED)  {
-					if (!panel.active) {
-						p = new Point(Integer.parseInt(e.paramString().substring(16, 19)), Integer.parseInt(e.paramString().substring(20, 23)));
-						System.out.println((int)(getAngle()/(360/model.currentMenu.length)));
-					}
-					
-				}
-				
-			}
-		}, mask);
-	}
-	
 	private void setListener() {
 		addMouseMotionListener(new MouseAdapter() {
 			public void mouseDragged(MouseEvent e) {
 				p = e.getPoint();
-				if (center.distance(p) > DIAMETRE) {
+				if (center.distance(p) > RAYON) {
 					controller.select(getTool());
-					setCenter(e.getPoint());
 				}
 				repaint();
 			}
@@ -76,33 +55,17 @@ public class MenuView extends JPanel {
 	}
 
 	public int getTool() {
-		int indexTool = 0;
-		if (p.getX() >= center.getX()) {
-			if (p.getY() >= center.getY()) {
-				if (p.getX() >= p.getY())
-					indexTool = 7;
-				else
-					indexTool = 8;
-			} else {
-				if (p.getX() >= p.getY())
-					indexTool = 1;
-				else
-					indexTool = 2;
+		int angleBlock = 360 / model.currentMenu.length;
+		int currentAngle = getAngle();
+		
+		int indexTool = 1;
+		while (indexTool < model.currentMenu.length + 1) {
+			if(indexTool * angleBlock > currentAngle) {
+				return indexTool - 1;
 			}
-		} else {
-			if (p.getY() >= center.getY()) {
-				if (p.getX() >= p.getY())
-					indexTool = 5;
-				else
-					indexTool = 6;
-			} else {
-				if (p.getX() >= p.getY())
-					indexTool = 3;
-				else
-					indexTool = 4;
-			}
+			indexTool++;
 		}
-		return indexTool;
+		return model.currentMenu.length - 1;
 	}
 	
 	public double distance (Point a, Point b) {
@@ -125,25 +88,23 @@ public class MenuView extends JPanel {
 	public void paintText(int lastAngle, int angle, Graphics2D g2, int i) {
 		if ((lastAngle - (angle / 2) <= 90) && (lastAngle - (angle / 2) > 0)) {
 			g2.drawString(model.currentMenu[i].name,
-					(float) (center.getX() + (Math.cos(Math.toRadians(lastAngle - (angle / 2))) * DIAMETRE / 3)),
-					(float) (center.getY() - (Math.sin(Math.toRadians(lastAngle - (angle / 2))) * DIAMETRE / 3)));
-			System.out.println("\n");
-
+					(float) (center.getX() + (Math.cos(Math.toRadians(lastAngle - (angle / 2))) * RAYON / 2)),
+					(float) (center.getY() - (Math.sin(Math.toRadians(lastAngle - (angle / 2))) * RAYON / 2)));
 		}
 		else if ((lastAngle - (angle / 2) <= 180) && (lastAngle - (angle / 2) > 90)) {
 			g2.drawString(model.currentMenu[i].name,
-					(float) (center.getX() - (Math.sin(Math.toRadians(lastAngle - (angle / 2)-90)) * DIAMETRE / 3)),
-					(float) (center.getY() - (Math.cos(Math.toRadians(lastAngle - (angle / 2)-90)) * DIAMETRE / 3)));
+					(float) (center.getX() - (Math.sin(Math.toRadians(lastAngle - (angle / 2)-90)) * RAYON / 2)),
+					(float) (center.getY() - (Math.cos(Math.toRadians(lastAngle - (angle / 2)-90)) * RAYON / 2)));
 		}
 		else if ((lastAngle - (angle / 2) <= 270) && (lastAngle - (angle / 2) > 180)) {
 			g2.drawString(model.currentMenu[i].name,
-					(float) (center.getX() - (Math.cos(Math.toRadians(lastAngle - (angle / 2)-180)) * DIAMETRE / 3)),
-					(float) (center.getY() + (Math.sin(Math.toRadians(lastAngle - (angle / 2)-180)) * DIAMETRE / 3))); 
+					(float) (center.getX() - (Math.cos(Math.toRadians(lastAngle - (angle / 2)-180)) * RAYON / 2)),
+					(float) (center.getY() + (Math.sin(Math.toRadians(lastAngle - (angle / 2)-180)) * RAYON / 2))); 
 			}
 		else {
 			g2.drawString(model.currentMenu[i].name,
-					(float) (center.getX() + (Math.sin(Math.toRadians(lastAngle - (angle / 2)-270)) * DIAMETRE / 3)),
-					(float) (center.getY() + (Math.cos(Math.toRadians(lastAngle - (angle / 2)-270)) * DIAMETRE / 3)));
+					(float) (center.getX() + (Math.sin(Math.toRadians(lastAngle - (angle / 2)-270)) * RAYON / 2)),
+					(float) (center.getY() + (Math.cos(Math.toRadians(lastAngle - (angle / 2)-270)) * RAYON / 2)));
 		}
 	}
 
@@ -151,10 +112,6 @@ public class MenuView extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
-
-		g2.setColor(Color.WHITE);
-		g2.fillRect(0, 0, getWidth(), getHeight());
 
 		g2.setStroke(new BasicStroke(2.0f));
 		g2.setPaint(Color.GRAY);
@@ -163,11 +120,11 @@ public class MenuView extends JPanel {
 		int angle = 360 / model.currentMenu.length;
 		for (int i = 0; i < model.currentMenu.length; i++) {
 			if (i == model.currentMenu.length - 1) {
-				g2.draw(new Arc2D.Double(center.x - (DIAMETRE / 2), center.y - (DIAMETRE / 2), DIAMETRE, DIAMETRE,
+				g2.draw(new Arc2D.Double(center.x - RAYON, center.y - RAYON, 2 * RAYON, 2 * RAYON,
 						lastAngle, 360 - lastAngle, Arc2D.PIE));
 				paintText(360, 360 - lastAngle, g2, i);
 			} else {
-				g2.draw(new Arc2D.Double(center.x - (DIAMETRE / 2), center.y - (DIAMETRE / 2), DIAMETRE, DIAMETRE,
+				g2.draw(new Arc2D.Double(center.x - RAYON, center.y - RAYON, 2 * RAYON, 2 * RAYON,
 						lastAngle, angle, Arc2D.PIE));
 				lastAngle += angle;
 				paintText(lastAngle, angle, g2, i);

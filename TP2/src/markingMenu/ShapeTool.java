@@ -66,7 +66,6 @@ public class ShapeTool extends Tool implements MouseInputListener {
 
 	@Override
 	public void exec() {
-		System.out.println("using tool " + this);
 		panel.removeMouseListener(tool);
 		panel.removeMouseMotionListener(tool);
 		tool = this;

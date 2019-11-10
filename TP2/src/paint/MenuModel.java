@@ -29,8 +29,7 @@ public class MenuModel {
 
 		ShapeTool shapeTools[] = createShapeTools();
 		ColorTool colorTools[] = createColorTools();
-		initialMenu = new Menu[] { new SubMenu("Shape", shapeTools), new SubMenu("Color", colorTools), new SubMenu("3", colorTools), new SubMenu("4", colorTools),
-				new SubMenu("5", colorTools), new SubMenu("6", colorTools), new SubMenu("7", colorTools), new SubMenu("8", colorTools)};
+		initialMenu = new Menu[] { new SubMenu("Shape", shapeTools), new SubMenu("Color", colorTools)};
 		currentMenu = initialMenu;
 	}
 

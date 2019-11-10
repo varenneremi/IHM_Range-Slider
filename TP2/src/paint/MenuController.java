@@ -7,9 +7,11 @@ import markingMenu.Tool;
 public class MenuController {
 
 	MenuModel model;
+	MenuView view;
 	
-	public MenuController(MenuModel model) {
+	public MenuController(MenuModel model, MenuView view) {
 		this.model = model;
+		this.view = view;
 	}
 
 	public void select(int menuIndex) {
@@ -20,6 +22,7 @@ public class MenuController {
 		} else if(menu instanceof SubMenu){
 			SubMenu item = (SubMenu) menu;
 			model.setCurrentMenu(item.menus);
+			view.setCenter(view.p);
 		}
 	}
 }
