@@ -19,6 +19,7 @@ public class MenuController {
 		if(menu instanceof Tool) {
 			Tool tool = (Tool) menu;
 			tool.exec();
+			view.finish();
 		} else if(menu instanceof SubMenu){
 			SubMenu item = (SubMenu) menu;
 			model.setCurrentMenu(item.menus);

@@ -1,6 +1,5 @@
 package paint;
 
-import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -132,5 +131,9 @@ public class MenuView extends JPanel {
 				
 		}
 
+	}
+
+	public void finish() {
+		setVisible(false);
 	}
 }
