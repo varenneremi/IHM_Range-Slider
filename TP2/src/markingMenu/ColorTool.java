@@ -1,14 +1,10 @@
 package markingMenu;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
 
 import paint.PaintPanel;
 
-@SuppressWarnings("serial")
-public class ColorTool extends AbstractAction implements Tool {
+public class ColorTool extends Tool {
 
 	private Color color;
 	PaintPanel panel;
@@ -20,8 +16,7 @@ public class ColorTool extends AbstractAction implements Tool {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		System.out.println("using tool " + this);
+	public void exec() {
 		panel.setColor(color);
 	}
 

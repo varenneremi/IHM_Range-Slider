@@ -4,33 +4,40 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import markingMenu.ColoredShape;
-import markingMenu.Menu;
 
 @SuppressWarnings("serial")
 public class PaintPanel extends JPanel {
 
-	Paint parentFrame;
-	
+	MenuView menuView;
+
 	Vector<ColoredShape> shapes = new Vector<ColoredShape>();
 	Color color;
-	
-	boolean rightClicked = false;
-	Menu[] menus;
+	boolean active;
+	Boolean isExpert = false;
 
-	public PaintPanel(Paint parentFrame) {
-		this.parentFrame = parentFrame;
-		
+	
+	public PaintPanel() {
 		this.color = Color.BLACK;
+		this.active = true;
+		this.add(setExpertMode());
 		setListener();
 	}
-	
+
+	public void setMenuView(MenuView menuView) {
+		this.menuView = menuView;
+	}
+
 	public Color getColor() {
 		return color;
 	}
@@ -39,28 +46,62 @@ public class PaintPanel extends JPanel {
 		this.color = color;
 	}
 	
-	public Vector<ColoredShape> getShapes(){
+	public JButton setExpertMode() {
+		JButton b = new JButton("Expert mode");
+		Color colorDefault = b.getBackground();
+		b.addActionListener(new ActionListener() {
+
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	if (!isExpert) {
+		    		isExpert = true;
+		    		b.setBackground(Color.LIGHT_GRAY);
+		    	} else {
+		    		isExpert = false;
+		    		b.setBackground(colorDefault);
+		    	}
+		    }
+		});
+		b.setVisible(true);
+		return b;
+	}
+
+	public Vector<ColoredShape> getShapes() {
 		return shapes;
 	}
-	
+
 	private void setListener() {
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				if(e.getButton() == MouseEvent.BUTTON3) {
-					rightClicked = true;
-					menus = parentFrame.getInitialMenu();
-					System.out.println("droit");
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					active = false;
+					menuView.active = true;
+					menuView.setCenter(e.getPoint());
+					menuView.resetMenu();
+					if (!isExpert) {
+						menuView.setVisible(true);
+					}
 				}
 			}
-			
+
 			public void mouseReleased(MouseEvent e) {
-				if(e.getButton() == MouseEvent.BUTTON3) {
-					rightClicked = false;
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					active = true;
+					menuView.active = false;
+					menuView.setVisible(false);
+				}
+			}
+		});
+
+		addMouseMotionListener(new MouseAdapter() {
+			public void mouseDragged(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					menuView.dispatchEvent(e);
 				}
 			}
 		});
 	}
-	
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
@@ -71,7 +112,12 @@ public class PaintPanel extends JPanel {
 
 		for (ColoredShape shape : shapes) {
 			g2.setColor(shape.getColor());
-			g2.draw(shape.getShape());
+			
+			if(!shape.isFill()) {
+				g2.draw(shape.getShape());
+			} else {
+				g2.fill(shape.getShape());
+			}
 		}
 	}
 }
