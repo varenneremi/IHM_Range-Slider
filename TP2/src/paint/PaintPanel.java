@@ -4,10 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -21,10 +24,13 @@ public class PaintPanel extends JPanel {
 	Vector<ColoredShape> shapes = new Vector<ColoredShape>();
 	Color color;
 	boolean active;
+	Boolean isExpert = false;
+
 	
 	public PaintPanel() {
 		this.color = Color.BLACK;
 		this.active = true;
+		this.add(setExpertMode());
 		setListener();
 	}
 
@@ -39,6 +45,27 @@ public class PaintPanel extends JPanel {
 	public void setColor(Color color) {
 		this.color = color;
 	}
+	
+	public JButton setExpertMode() {
+		JButton b = new JButton("Expert mode");
+		Color colorDefault = b.getBackground();
+		b.addActionListener(new ActionListener() {
+
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	if (!isExpert) {
+		    		isExpert = true;
+		    		b.setBackground(Color.BLUE);
+		    	} else {
+		    		isExpert = false;
+		    		b.setBackground(colorDefault);
+		    	}
+		    	menuView.setVisible(!isExpert);
+		    }
+		});
+		b.setVisible(true);
+		return b;
+	}
 
 	public Vector<ColoredShape> getShapes() {
 		return shapes;
@@ -51,7 +78,8 @@ public class PaintPanel extends JPanel {
 					active = false;
 					menuView.setCenter(e.getPoint());
 					menuView.resetMenu();
-					menuView.setVisible(true);
+					if (!isExpert)
+						menuView.setVisible(true);
 				}
 			}
 

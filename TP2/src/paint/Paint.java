@@ -2,7 +2,10 @@ package paint;
 //////////////////////////////////////////////////////////////////////////////
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -17,7 +20,6 @@ class Paint extends JFrame {
 		super(title);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(800, 600));
-
 		panel = new PaintPanel();
 		menuView = new MenuView(panel);
 		panel.setMenuView(menuView);
@@ -30,6 +32,7 @@ class Paint extends JFrame {
 		pack();
 		setVisible(true);
 	}
+
 
 	/* main *********************************************************************/
 
