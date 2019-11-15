@@ -39,7 +39,7 @@ public class MenuModel {
 
 	private ColorTool[] createColorTools() {
 		ColorTool colorTools[] = { new ColorTool("red", Color.RED, panel), new ColorTool("blue", Color.BLUE, panel),
-				new ColorTool("green", Color.GREEN, panel) };
+				new ColorTool("green", Color.GREEN, panel), new ColorTool("black", Color.BLACK, panel) };
 		return colorTools;
 	}
 
@@ -52,7 +52,7 @@ public class MenuModel {
 						path = new Path2D.Double();
 						path.moveTo(getOrigin().getX(), getOrigin().getY());
 						setShape(path);
-						panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
+						panel.getShapes().add(new ColoredShape(getShape(), panel.getColor(), false));
 					}
 					path.lineTo(e.getX(), e.getY());
 					panel.repaint();
@@ -65,7 +65,21 @@ public class MenuModel {
 					if (rect == null) {
 						rect = new Rectangle2D.Double(getOrigin().getX(), getOrigin().getY(), 0, 0);
 						setShape(rect);
-						panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
+						panel.getShapes().add(new ColoredShape(getShape(), panel.getColor(), false));
+					}
+					rect.setRect(min(e.getX(), getOrigin().getX()), min(e.getY(), getOrigin().getY()),
+							abs(e.getX() - getOrigin().getX()), abs(e.getY() - getOrigin().getY()));
+					panel.repaint();
+				}
+			}
+		}, new ShapeTool("fill rect", panel) {
+			public void mouseDragged(MouseEvent e) {
+				if (panel.active) {
+					Rectangle2D.Double rect = (Rectangle2D.Double) getShape();
+					if (rect == null) {
+						rect = new Rectangle2D.Double(getOrigin().getX(), getOrigin().getY(), 0, 0);
+						setShape(rect);
+						panel.getShapes().add(new ColoredShape(getShape(), panel.getColor(), true));
 					}
 					rect.setRect(min(e.getX(), getOrigin().getX()), min(e.getY(), getOrigin().getY()),
 							abs(e.getX() - getOrigin().getX()), abs(e.getY() - getOrigin().getY()));
@@ -79,7 +93,7 @@ public class MenuModel {
 					if (ellipse == null) {
 						ellipse = new Ellipse2D.Double(getOrigin().getX(), getOrigin().getY(), 0, 0);
 						setShape(ellipse);
-						panel.getShapes().add(new ColoredShape(getShape(), panel.getColor()));
+						panel.getShapes().add(new ColoredShape(getShape(), panel.getColor(), false));
 					}
 					ellipse.setFrameFromCenter(getOrigin().getX(), getOrigin().getY(), e.getX(), e.getY());
 					panel.repaint();

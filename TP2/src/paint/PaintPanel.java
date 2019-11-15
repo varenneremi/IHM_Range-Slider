@@ -75,6 +75,7 @@ public class PaintPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					active = false;
+					menuView.active = true;
 					menuView.setCenter(e.getPoint());
 					menuView.resetMenu();
 					if (!isExpert) {
@@ -86,6 +87,7 @@ public class PaintPanel extends JPanel {
 			public void mouseReleased(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					active = true;
+					menuView.active = false;
 					menuView.setVisible(false);
 				}
 			}
@@ -110,7 +112,12 @@ public class PaintPanel extends JPanel {
 
 		for (ColoredShape shape : shapes) {
 			g2.setColor(shape.getColor());
-			g2.draw(shape.getShape());
+			
+			if(!shape.isFill()) {
+				g2.draw(shape.getShape());
+			} else {
+				g2.fill(shape.getShape());
+			}
 		}
 	}
 }

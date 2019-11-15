@@ -7,10 +7,12 @@ public class ColoredShape {
 
 	private Shape shape;
 	private Color color;
+	private boolean fill;
 	
-	public ColoredShape(Shape shape, Color color) {
+	public ColoredShape(Shape shape, Color color, boolean fill) {
 		this.setShape(shape);
 		this.setColor(color);
+		this.setFill(fill);
 	}
 
 	public Color getColor() {
@@ -27,5 +29,13 @@ public class ColoredShape {
 
 	public void setShape(Shape shape) {
 		this.shape = shape;
+	}
+
+	public boolean isFill() {
+		return fill;
+	}
+
+	public void setFill(boolean fill) {
+		this.fill = fill;
 	}
 }

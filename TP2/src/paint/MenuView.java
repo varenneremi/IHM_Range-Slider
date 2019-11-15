@@ -21,11 +21,13 @@ public class MenuView extends JPanel {
 	MenuModel model;
 	MenuController controller;
 
+	boolean active;
 	Point center;
 	protected Point p;
 
 	public MenuView(PaintPanel panel) {
 		this.panel = panel;
+		this.active = false;
 		model = new MenuModel(this, panel);
 		controller = new MenuController(model, this);
 
@@ -40,12 +42,14 @@ public class MenuView extends JPanel {
 	private void setListener() {
 		addMouseMotionListener(new MouseAdapter() {
 			public void mouseDragged(MouseEvent e) {
-				p = e.getPoint();
-				if (center.distance(p) > RAYON) {
-					controller.select(getTool());
-				}
-				if(!panel.isExpert) {
-					repaint();
+				if (active) {
+					p = e.getPoint();
+					if (center.distance(p) > RAYON) {
+						controller.select(getTool());
+					}
+					if (!panel.isExpert) {
+						repaint();
+					}
 				}
 			}
 		});
@@ -135,6 +139,7 @@ public class MenuView extends JPanel {
 	}
 
 	public void finish() {
+		this.active = false;
 		setVisible(false);
 	}
 }
