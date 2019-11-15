@@ -55,12 +55,11 @@ public class PaintPanel extends JPanel {
 		    public void actionPerformed(ActionEvent e) {
 		    	if (!isExpert) {
 		    		isExpert = true;
-		    		b.setBackground(Color.BLUE);
+		    		b.setBackground(Color.LIGHT_GRAY);
 		    	} else {
 		    		isExpert = false;
 		    		b.setBackground(colorDefault);
 		    	}
-		    	menuView.setVisible(!isExpert);
 		    }
 		});
 		b.setVisible(true);
@@ -78,8 +77,9 @@ public class PaintPanel extends JPanel {
 					active = false;
 					menuView.setCenter(e.getPoint());
 					menuView.resetMenu();
-					if (!isExpert)
+					if (!isExpert) {
 						menuView.setVisible(true);
+					}
 				}
 			}
 

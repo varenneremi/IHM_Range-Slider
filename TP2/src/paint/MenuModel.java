@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Arrays;
 
 import markingMenu.ColorTool;
 import markingMenu.ColoredShape;
@@ -20,6 +21,7 @@ public class MenuModel {
 	protected static Menu[] initialMenu;
 
 	protected Menu[] currentMenu;
+	protected Menu[] previousMenu;
 	protected MenuView view;
 	PaintPanel panel;
 
@@ -28,9 +30,11 @@ public class MenuModel {
 		this.panel = panel;
 
 		ShapeTool shapeTools[] = createShapeTools();
+		shapeTools[0].exec();
 		ColorTool colorTools[] = createColorTools();
-		initialMenu = new Menu[] { new SubMenu("Shape", shapeTools), new SubMenu("Color", colorTools)};
-		currentMenu = initialMenu;
+		initialMenu = new Menu[] { new SubMenu("Shape", shapeTools), new SubMenu("Color", colorTools) };
+		previousMenu = new Menu[] { new SubMenu("Retour", initialMenu) };
+		currentMenu = concat(initialMenu, previousMenu);
 	}
 
 	private ColorTool[] createColorTools() {
@@ -91,10 +95,21 @@ public class MenuModel {
 	}
 
 	public void resetMenu() {
-		currentMenu = initialMenu;
+		currentMenu = concat(initialMenu, previousMenu);
 	}
-	
+
 	public void setCurrentMenu(Menu[] menu) {
-		currentMenu = menu;
+		previousMenu = new Menu[] { new SubMenu("Retour", Arrays.copyOf(currentMenu, currentMenu.length-1)) };
+		currentMenu = concat(menu, previousMenu);
 	}
+
+	Menu[] concat(Menu[] A, Menu[] B) {
+		int aLen = A.length;
+		int bLen = B.length;
+		Menu[] c = new Menu[aLen + bLen];
+		System.arraycopy(A, 0, c, 0, aLen);
+		System.arraycopy(B, 0, c, aLen, bLen);
+		return c;
+	}
+
 }
