@@ -90,10 +90,10 @@ export let rotozoom =   ( element           : HTMLElement
         c = (dy2 - s*dx1)/dy1;
     }
     let m = svg.createSVGMatrix();
-    m.a = originalMatrix.a;
-    m.b = originalMatrix.b;
-    m.c = originalMatrix.c;
-    m.d = originalMatrix.d;
+    m.a = c;
+    m.b = s;
+    m.c = -s;
+    m.d = c;
     m.e = Pt1_coord_parent.x - c * Pt1_coord_element.x + s * Pt1_coord_element.y;
     m.f = Pt1_coord_parent.y - s * Pt1_coord_element.x - c * Pt1_coord_element.y;
     setMatrixToElement(element, m);
