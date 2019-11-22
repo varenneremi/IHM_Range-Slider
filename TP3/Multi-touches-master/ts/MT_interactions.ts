@@ -42,6 +42,7 @@ function multiTouch(element: HTMLElement) : void {
                     const touch = getRelevantDataFromEvent(evt);
                     Pt1_coord_parent = transfo.getPoint(touch.clientX, touch.clientY);
                     transfo.drag(element, originalMatrix, Pt1_coord_element, Pt1_coord_parent);
+                    originalMatrix = transfo.getMatrixFromElement(element);
                     return true;
                 }
             },
@@ -87,6 +88,7 @@ function multiTouch(element: HTMLElement) : void {
                         Pt2_coord_parent = transfo.getPoint(touch.clientX, touch.clientY);
                     }
                     transfo.rotozoom(element, originalMatrix, Pt1_coord_element, Pt1_coord_parent, Pt2_coord_element, Pt2_coord_parent);
+                    originalMatrix = transfo.getMatrixFromElement(element);
                     return true;
                 }
             },
